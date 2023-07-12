@@ -30,7 +30,7 @@ def retry_get(driver, url):
             time.sleep(retry_delay)
     raise Exception(f"Failed to get URL: {url}")
 
-def run(url, driver, output_dir):
+def write_core_content_to_directory(url, driver, output_dir):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     try:
@@ -47,17 +47,17 @@ def run(url, driver, output_dir):
         print(url)
         print(e)
 
-def write_core_content_to_file(sitemap_urls, output_dir):
+def run(sitemap_urls, output_dir):
     driver = webdriver.Chrome(ChromeDriverManager().install())
     urls = []
     for sitemap_url in sitemap_urls:
         urls.extend(get_urls(sitemap_url))
     for url in urls:
-        run(url, driver, output_dir)
+        write_core_content_to_directory(url, driver, output_dir)
         time.sleep(0.5)
     driver.quit()
 
 if __name__ == "__main__":
     sitemap_urls = ["https://registry.terraform.io/sitemaps/providers-2.xml"]
     output_dir_name = "docs"
-    write_core_content_to_file(sitemap_urls, output_dir_name)
+    run(sitemap_urls, output_dir_name)
